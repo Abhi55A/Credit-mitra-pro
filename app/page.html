@@ -1,0 +1,66 @@
+page.tsx
+export default function Home() {
+  return (
+    <main className="min-h-screen bg-slate-50">
+      {/* Hero */}
+      <section className="bg-blue-700 text-white">
+        <div className="mx-auto max-w-7xl px-6 py-20">
+          <h1 className="text-5xl font-bold">CreditMitra Pro</h1>
+
+          <p className="mt-4 text-xl">
+            Your Trusted Loan Partner
+          </p>
+
+          <p className="mt-6 max-w-2xl text-lg">
+            Apply for Personal, Business, Home and Car Loans through our trusted lending partners.
+          </p>
+
+          <div className="mt-8 flex gap-4">
+            <button className="rounded-lg bg-white px-6 py-3 font-semibold text-blue-700">
+              Apply Now
+            </button>
+
+            <button className="rounded-lg border border-white px-6 py-3">
+              Check Eligibility
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* Loan Cards */}
+      <section className="mx-auto max-w-7xl px-6 py-16">
+        <h2 className="mb-10 text-center text-4xl font-bold">
+          Our Loan Services
+        </h2>
+
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {[
+            "Personal Loan",
+            "Business Loan",
+            "Home Loan",
+            "Car Loan",
+            "Loan Against Property",
+            "Credit Card",
+          ].map((loan) => (
+            <div
+              key={loan}
+              className="rounded-2xl bg-white p-6 shadow-lg"
+            >
+              <h3 className="text-xl font-bold text-blue-700">
+                {loan}
+              </h3>
+
+              <p className="mt-3 text-gray-600">
+                Fast application support and expert assistance.
+              </p>
+
+              <button className="mt-6 rounded-lg bg-blue-700 px-5 py-2 text-white">
+                Apply
+              </button>
+            </div>
+          ))}
+        </div>
+      </section>
+    </main>
+  );
+}npm run dev

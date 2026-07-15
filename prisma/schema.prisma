@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Customer {
+  id       String  @id @default(cuid())
+  fullName String
+  mobile   String  @unique
+  password String?
+
+  otp       String?
+  otpExpiry DateTime?
+
+  email      String?
+  city       String?
+  address    String?
+  state      String?
+  pincode    String?
+  dob        DateTime?
+  occupation String?
+
+  income Float?
+  cibil  Int?
+
+  aadhaar       String?
+  pan           String?
+  salarySlip    String?
+  bankStatement String?
+
+  photoUrl String?
+
+  createdAt DateTime @default(now())
+
+  applications LoanApplication[]
+}
+
+model LoanApplication {
+  id String @id @default(cuid())
+
+  loanType String
+  amount   Float
+  status   String @default("Pending")
+
+  createdAt DateTime @default(now())
+
+  aadhaarUrl       String?
+  panUrl           String?
+  salarySlipUrl    String?
+  bankStatementUrl String?
+
+  customerId String
+
+  customer Customer @relation(fields: [customerId], references: [id])
+}
+
+model ContactEnquiry {
+  id        String   @id @default(cuid())
+  name      String
+  mobile    String
+  loanType  String
+  createdAt DateTime @default(now())
+}
