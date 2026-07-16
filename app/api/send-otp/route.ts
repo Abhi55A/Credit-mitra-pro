@@ -38,22 +38,23 @@ export async function POST(request: Request) {
     return NextResponse.json({
       success: true,
       message: "OTP sent successfully",
-      otp: otp,
+      otp,
     });
 
-  } catch (error) {
+  } catch (error: any) {
 
-    console.log(error);
+    console.error("SEND OTP ERROR:", error);
+    console.error("ERROR MESSAGE:", error?.message);
+    console.error("ERROR STACK:", error?.stack);
 
     return NextResponse.json(
       {
         success: false,
-        message: "Server Error",
+        message: error?.message || "Server Error",
       },
       {
         status: 500,
       }
     );
-
   }
 }
