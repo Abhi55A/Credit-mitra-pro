@@ -1,22 +1,10 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
 
 export async function GET() {
-  try {
-    const customerCount = await prisma.customer.count();
-
-    return NextResponse.json({
-      success: true,
-      database: "CONNECTED",
-      customerCount,
-    });
-
-  } catch (error: any) {
-    return NextResponse.json({
-      success: false,
-      database: "FAILED",
-      error: error.message,
-      stack: error.stack,
-    });
-  }
+  return NextResponse.json({
+    DATABASE_URL: process.env.DATABASE_URL ? "FOUND" : "MISSING",
+    DIRECT_URL: process.env.DIRECT_URL ? "FOUND" : "MISSING",
+    SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL ? "FOUND" : "MISSING",
+    SUPABASE_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ? "FOUND" : "MISSING",
+  });
 }
