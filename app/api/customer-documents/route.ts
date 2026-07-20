@@ -5,17 +5,19 @@ import { supabase } from "@/lib/supabase";
 async function uploadFile(
   file: File | null,
   folder: string
-): Promise<string |null> {
+): Promise<string | null> {
   if (!file) return null;
 
   const fileName = `${folder}/${Date.now()}-${file.name}`;
 
   const { error } = await supabase.storage
     .from("documents")
-    .upload(fileName, file);
+    .upload(fileName, file, {
+      upsert: true,
+    });
 
   if (error) {
-    throw error;
+    throw new Error(error.message);
   }
 
   const { data } = supabase.storage
@@ -61,9 +63,7 @@ export async function POST(request: Request) {
           success: false,
           message: "Customer not found",
         },
-        {
-          status: 404,
-        }
+        { status: 404 }
       );
     }
 
@@ -73,9 +73,7 @@ export async function POST(request: Request) {
           success: false,
           message: "Loan application not found",
         },
-        {
-          status: 404,
-        }
+        { status: 404 }
       );
     }
 
@@ -102,13 +100,14 @@ export async function POST(request: Request) {
       },
     });
 
-  } catch (error) {
-    console.error(error);
+  } catch (error: any) {
+    console.error("CUSTOMER DOCUMENT ERROR:", error);
 
     return NextResponse.json(
       {
         success: false,
-        message: "Upload failed",
+        message: error?.message || String(error),
+        error: error,
       },
       {
         status: 500,
