@@ -17,7 +17,7 @@ async function uploadFile(
     });
 
   if (error) {
-    throw new Error(error.message);
+    throw new Error("SUPABASE: " + error.message);
   }
 
   const { data } = supabase.storage
@@ -32,6 +32,18 @@ export async function POST(request: Request) {
     const formData = await request.formData();
 
     const mobile = formData.get("mobile") as string;
+
+    if (!mobile) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Mobile number is missing",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
 
     const aadhaar = formData.get("aadhaar") as File | null;
     const pan = formData.get("pan") as File | null;
@@ -58,23 +70,11 @@ export async function POST(request: Request) {
     });
 
     if (!customer) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Customer not found",
-        },
-        { status: 404 }
-      );
+      throw new Error("Customer not found");
     }
 
     if (customer.applications.length === 0) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Loan application not found",
-        },
-        { status: 404 }
-      );
+      throw new Error("Loan application not found");
     }
 
     await prisma.loanApplication.update({
@@ -101,13 +101,14 @@ export async function POST(request: Request) {
     });
 
   } catch (error: any) {
+
     console.error("CUSTOMER DOCUMENT ERROR:", error);
 
     return NextResponse.json(
       {
         success: false,
-        message: error?.message || String(error),
-        error: error,
+        message: error?.message || "Unknown Error",
+        stack: error?.stack || String(error),
       },
       {
         status: 500,
